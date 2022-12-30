@@ -1,0 +1,1 @@
+SELECT 'SQLite: ' || sqlite_version() as database
