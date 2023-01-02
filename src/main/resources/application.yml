@@ -1,6 +1,9 @@
 server:
   port: ${AF_SERVER_PORT:10241}
 
+app:
+  workspace: ${user.home}/.afile
+
 spring:
   application:
     name: AFile
@@ -22,7 +25,6 @@ management:
     web:
       exposure:
         include: ${AF_MANAGEMENT_ENDPOINTS:health,metrics}
-
 ---
 spring:
   config:
@@ -44,7 +46,7 @@ spring:
   datasource:
     username: root
     password: root
-    url: jdbc:sqlite:${user.home}/.afile/db
+    url: jdbc:sqlite:${app.workspace}/db
     driver-class-name: org.sqlite.JDBC
 
   flyway:
