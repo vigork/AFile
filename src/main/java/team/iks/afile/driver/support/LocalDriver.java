@@ -1,4 +1,4 @@
-package team.iks.afile.storage.support;
+package team.iks.afile.driver.support;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,7 +10,6 @@ import java.io.OutputStream;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
-import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -21,34 +20,34 @@ import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import team.iks.afile.common.FileOperationException;
-import team.iks.afile.storage.AbstractStorage;
-import team.iks.afile.storage.FileItem;
-import team.iks.afile.storage.StorageConfig;
-import team.iks.afile.util.FileUtils;
+import team.iks.afile.driver.AbstractDriver;
+import team.iks.afile.driver.DriverConfig;
+import team.iks.afile.driver.FileItem;
+import team.iks.afile.exception.FileOperationException;
+import team.iks.afile.util.FileOperationUtils;
 
 /**
- * 本地存储库
+ * 本地存储库驱动
  *
  * @author vigork
  * At: 2023/1/1
  */
-public class LocalStorage extends AbstractStorage<LocalStorage.Config> {
+public class LocalDriver extends AbstractDriver<LocalDriver.Config> {
 
     @Data
     @EqualsAndHashCode(callSuper = true)
     @Accessors(chain = true)
-    public static class Config extends StorageConfig {
+    public static class Config extends DriverConfig {
         private String rootPath;
     }
 
-    public LocalStorage(Config config) {
+    public LocalDriver(Config config) {
         super(config);
     }
 
     @Override
     public List<FileItem> list(String virtualPath) {
-        File actualFile = new File(config.getRootPath(), Paths.get(virtualPath).normalize().toString());
+        File actualFile = new File(config.getRootPath(), FileOperationUtils.asAbsolutePath(virtualPath));
         if (!actualFile.exists()) {
             throw new FileOperationException("文件不存在");
         }
@@ -58,7 +57,7 @@ public class LocalStorage extends AbstractStorage<LocalStorage.Config> {
 
     @Override
     public OutputStream read(String virtualPath) {
-        File actualFile = new File(config.getRootPath(), Paths.get(virtualPath).normalize().toString());
+        File actualFile = new File(config.getRootPath(), FileOperationUtils.asAbsolutePath(virtualPath));
         try {
             return new FileOutputStream(actualFile);
         } catch (FileNotFoundException e) {
@@ -68,7 +67,7 @@ public class LocalStorage extends AbstractStorage<LocalStorage.Config> {
 
     @Override
     public FileItem makeDir(String virtualPath) {
-        File actualFile = new File(config.getRootPath(), Paths.get(virtualPath).normalize().toString());
+        File actualFile = new File(config.getRootPath(), FileOperationUtils.asAbsolutePath(virtualPath));
 
         String exp = "文件夹已存在";
         if (!actualFile.exists()) {
@@ -89,7 +88,7 @@ public class LocalStorage extends AbstractStorage<LocalStorage.Config> {
 
     @Override
     public FileItem write(String virtualPath, InputStream in) {
-        File actualFile = new File(config.getRootPath(), Paths.get(virtualPath).normalize().toString());
+        File actualFile = new File(config.getRootPath(), FileOperationUtils.asAbsolutePath(virtualPath));
         try (ReadableByteChannel src = Channels.newChannel(in); FileOutputStream out = new FileOutputStream(actualFile)) {
             out.getChannel().transferFrom(src, 0, in.available());
         } catch (IOException e) {
@@ -101,7 +100,7 @@ public class LocalStorage extends AbstractStorage<LocalStorage.Config> {
 
     @Override
     public void delete(String virtualPath) {
-        File actualFile = new File(config.getRootPath(), Paths.get(virtualPath).normalize().toString());
+        File actualFile = new File(config.getRootPath(), FileOperationUtils.asAbsolutePath(virtualPath));
         if (!actualFile.delete()) {
             throw new FileOperationException("文件删除失败");
         }
@@ -109,8 +108,8 @@ public class LocalStorage extends AbstractStorage<LocalStorage.Config> {
 
     @Override
     public FileItem move(String virtualPath, String newVirtualPath) {
-        File actualFile = new File(config.getRootPath(), Paths.get(virtualPath).normalize().toString());
-        File actualNewFile = new File(config.getRootPath(), Paths.get(newVirtualPath).normalize().toString());
+        File actualFile = new File(config.getRootPath(), FileOperationUtils.asAbsolutePath(virtualPath));
+        File actualNewFile = new File(config.getRootPath(), FileOperationUtils.asAbsolutePath(newVirtualPath));
         if (!actualFile.renameTo(actualNewFile)) {
             throw new FileOperationException("移动文件失败");
         }
@@ -120,8 +119,8 @@ public class LocalStorage extends AbstractStorage<LocalStorage.Config> {
 
     @Override
     public FileItem copy(String virtualPath, String targetVirtualPath) {
-        File actualFile = new File(config.getRootPath(), Paths.get(virtualPath).normalize().toString());
-        File actualNewFile = new File(config.getRootPath(), Paths.get(targetVirtualPath).normalize().toString());
+        File actualFile = new File(config.getRootPath(), FileOperationUtils.asAbsolutePath(virtualPath));
+        File actualNewFile = new File(config.getRootPath(), FileOperationUtils.asAbsolutePath(targetVirtualPath));
 
         try (FileInputStream is = new FileInputStream(actualFile); FileOutputStream os = new FileOutputStream(actualNewFile)) {
             FileChannel ic = is.getChannel();
@@ -143,7 +142,7 @@ public class LocalStorage extends AbstractStorage<LocalStorage.Config> {
     private FileItem buildFileItem(File file) {
         return new FileItem()
                 .setName(file.getName())
-                .setType(FileUtils.getFileType(file))
+                .setType(FileOperationUtils.getFileType(file))
                 .setSize(file.isDirectory() ? null : file.length())
                 .setModifyTime(LocalDateTime.ofInstant(Instant.ofEpochMilli(file.lastModified()), ZoneId.systemDefault()));
     }

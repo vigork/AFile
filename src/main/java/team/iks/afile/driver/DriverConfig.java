@@ -1,15 +1,15 @@
-package team.iks.afile.storage;
+package team.iks.afile.driver;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 /**
- * TODO: description
+ * 驱动器配置信息
  *
  * @author vigork
- * At: 2023/1/1
+ * At: 2023/1/2
  */
 @Data
 @Accessors(chain = true)
-public class StorageConfig {
+public class DriverConfig {
 }
