@@ -1,6 +1,7 @@
 package team.iks.afile.driver;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,6 +10,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
+
+import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
+import team.iks.afile.driver.annotation.DriverAttribute;
 
 import lombok.RequiredArgsConstructor;
 
@@ -66,6 +70,30 @@ public class DriverContext {
         return drivers.stream().map(driver -> new DriverInfo()
                 .setName(driver.getSimpleName())
                 .setDriver(driver)
+                .setAttributes(buildDriverAttributesInfo(driver))
         ).collect(Collectors.toList());
+    }
+
+    private List<DriverAttributeInfo> buildDriverAttributesInfo(Class<? extends AbstractDriver<?>> driver) {
+        Class<?> actualDriverAttributes = (Class<?>) ((ParameterizedTypeImpl) driver.getGenericSuperclass()).getActualTypeArguments()[0];
+        Field[] attributesDeclaredFields = actualDriverAttributes.getDeclaredFields();
+
+        List<DriverAttributeInfo> result = new ArrayList<>();
+        for (Field attributesDeclaredField : attributesDeclaredFields) {
+            DriverAttribute annotation = attributesDeclaredField.getAnnotation(DriverAttribute.class);
+            if (null == annotation) {
+                continue;
+            }
+
+            DriverAttributeInfo driverAttributeInfo = new DriverAttributeInfo()
+                    .setLabel(annotation.label())
+                    .setName(attributesDeclaredField.getName())
+                    .setDescription(annotation.description())
+                    .setRequired(annotation.required())
+                    .setOrder(annotation.order());
+            result.add(driverAttributeInfo);
+        }
+
+        return result;
     }
 }

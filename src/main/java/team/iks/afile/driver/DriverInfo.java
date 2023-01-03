@@ -1,5 +1,7 @@
 package team.iks.afile.driver;
 
+import java.util.List;
+
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -21,4 +23,9 @@ public class DriverInfo {
      * 驱动器
      */
     private Class<? extends AbstractDriver<?>> driver;
+
+    /**
+     * 配置项信息
+     */
+    private List<DriverAttributeInfo> attributes;
 }

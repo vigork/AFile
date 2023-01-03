@@ -17,7 +17,7 @@ class LocalStorageTest {
 
     @BeforeAll
     static void init() {
-        localStorage = new LocalDriver(new LocalDriver.Config().setRootPath("/tmp"));
+        localStorage = new LocalDriver(new LocalDriver.Attributes().setRootPath("/tmp"));
     }
 
     @Test

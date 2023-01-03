@@ -17,14 +17,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
+import team.iks.afile.driver.annotation.DriverAttribute;
 import team.iks.afile.driver.AbstractDriver;
-import team.iks.afile.driver.DriverConfig;
+import team.iks.afile.driver.DriverAttributes;
 import team.iks.afile.driver.FileItem;
 import team.iks.afile.exception.FileOperationException;
 import team.iks.afile.util.FileOperationUtils;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
 /**
  * 本地存储库驱动
@@ -32,16 +34,17 @@ import team.iks.afile.util.FileOperationUtils;
  * @author vigork
  * At: 2023/1/1
  */
-public class LocalDriver extends AbstractDriver<LocalDriver.Config> {
+public class LocalDriver extends AbstractDriver<LocalDriver.Attributes> {
 
     @Data
     @EqualsAndHashCode(callSuper = true)
     @Accessors(chain = true)
-    public static class Config extends DriverConfig {
+    public static class Attributes extends DriverAttributes {
+        @DriverAttribute(label = "物理路径", required = true)
         private String rootPath;
     }
 
-    public LocalDriver(Config config) {
+    public LocalDriver(Attributes config) {
         super(config);
     }
 
