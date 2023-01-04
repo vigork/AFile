@@ -15,6 +15,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class FileItem {
     private String name;
+    private String path;
     private FileTypeEnum type;
     private Long size;
     private LocalDateTime modifyTime;

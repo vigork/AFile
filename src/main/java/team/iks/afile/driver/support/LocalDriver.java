@@ -146,6 +146,7 @@ public class LocalDriver extends AbstractDriver<LocalDriver.Attributes> {
     private FileItem buildFileItem(File file) {
         return new FileItem()
                 .setName(file.getName())
+                .setPath(file.getAbsolutePath().substring(config.getRootPath().length()))
                 .setType(FileOperationUtils.getFileType(file))
                 .setSize(file.isDirectory() ? null : file.length())
                 .setModifyTime(LocalDateTime.ofInstant(Instant.ofEpochMilli(file.lastModified()), ZoneId.systemDefault()));
