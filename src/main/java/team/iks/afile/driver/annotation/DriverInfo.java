@@ -6,25 +6,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 配置项信息
+ * 启动器信息
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface DriverAttribute {
+@Target(ElementType.TYPE)
+public @interface DriverInfo {
     /**
-     * 标签名称
+     * 名称
      */
-    String label();
-
-    /**
-     * 配置项描述信息
-     */
-    String description() default "";
-
-    /**
-     * 是否必填
-     */
-    boolean required() default false;
+    String name();
 
     /**
      * 排序

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import team.iks.afile.driver.DriverInfo;
+import team.iks.afile.driver.Driver;
 import team.iks.afile.driver.DriverContext;
 
 /**
@@ -23,7 +23,7 @@ public class StorageController {
     private final DriverContext driverContext;
 
     @GetMapping("/drivers")
-    public List<DriverInfo> drivers() {
+    public List<Driver> drivers() {
         return driverContext.drivers();
     }
 }

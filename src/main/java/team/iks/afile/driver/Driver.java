@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-public class DriverInfo {
+public class Driver {
     /**
      * 驱动名称
      */
@@ -27,5 +27,10 @@ public class DriverInfo {
     /**
      * 配置项信息
      */
-    private List<DriverAttributeInfo> attributes;
+    private List<DriverAttribute> attributes;
+
+    /**
+     * 排序
+     */
+    private Integer order;
 }

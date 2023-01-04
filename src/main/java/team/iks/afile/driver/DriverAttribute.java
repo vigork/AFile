@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-public class DriverAttributeInfo {
+public class DriverAttribute {
     private String label;
     private String name;
     private String description;

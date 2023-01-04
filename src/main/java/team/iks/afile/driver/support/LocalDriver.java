@@ -17,10 +17,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import team.iks.afile.driver.annotation.DriverAttribute;
+import team.iks.afile.driver.annotation.DriverAttributeInfo;
 import team.iks.afile.driver.AbstractDriver;
 import team.iks.afile.driver.DriverAttributes;
 import team.iks.afile.driver.FileItem;
+import team.iks.afile.driver.annotation.DriverInfo;
 import team.iks.afile.exception.FileOperationException;
 import team.iks.afile.util.FileOperationUtils;
 
@@ -34,13 +35,13 @@ import lombok.experimental.Accessors;
  * @author vigork
  * At: 2023/1/1
  */
+@DriverInfo(name = "本地存储")
 public class LocalDriver extends AbstractDriver<LocalDriver.Attributes> {
-
     @Data
     @EqualsAndHashCode(callSuper = true)
     @Accessors(chain = true)
     public static class Attributes extends DriverAttributes {
-        @DriverAttribute(label = "物理路径", required = true)
+        @DriverAttributeInfo(label = "物理路径", required = true)
         private String rootPath;
     }
 

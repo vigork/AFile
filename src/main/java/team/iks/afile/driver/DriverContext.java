@@ -2,6 +2,7 @@ package team.iks.afile.driver;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,7 +13,8 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
-import team.iks.afile.driver.annotation.DriverAttribute;
+import team.iks.afile.driver.annotation.DriverAttributeInfo;
+import team.iks.afile.driver.annotation.DriverInfo;
 
 import lombok.RequiredArgsConstructor;
 
@@ -33,6 +35,8 @@ public class DriverContext {
 
     /**
      * 加载系统内置存储库驱动
+     * <p></p>
+     * 将加载 <code>pkgName</code> 包下所有 {@link AbstractDriver} 的非抽象子类作为内置的存储库驱动器
      */
     private List<Class<? extends AbstractDriver<?>>> getSystemDrivers() {
         final String pkgName = this.getClass().getPackage().getName() + ".support";
@@ -54,7 +58,7 @@ public class DriverContext {
             try {
                 @SuppressWarnings("unchecked")
                 Class<? extends AbstractDriver<?>> aClass = (Class<? extends AbstractDriver<?>>) Class.forName(clzName);
-                if (AbstractDriver.class.isAssignableFrom(aClass)) {
+                if (!Modifier.isAbstract(aClass.getModifiers()) && AbstractDriver.class.isAssignableFrom(aClass)) {
                     result.add(aClass);
                 }
             } catch (Exception ignored) {}
@@ -66,31 +70,35 @@ public class DriverContext {
     /**
      * 获取已加载的存储库驱动信息
      */
-    public List<DriverInfo> drivers() {
-        return drivers.stream().map(driver -> new DriverInfo()
-                .setName(driver.getSimpleName())
-                .setDriver(driver)
-                .setAttributes(buildDriverAttributesInfo(driver))
-        ).collect(Collectors.toList());
+    public List<Driver> drivers() {
+        return drivers.stream().map(driver -> {
+            DriverInfo driverInfoAnnotation = driver.getAnnotation(DriverInfo.class);
+
+            return new Driver()
+                    .setName(Optional.ofNullable(driverInfoAnnotation).map(DriverInfo::name).orElse(driver.getSimpleName()))
+                    .setDriver(driver)
+                    .setAttributes(buildDriverAttributes(driver))
+                    .setOrder(Optional.ofNullable(driverInfoAnnotation).map(DriverInfo::order).orElse(Integer.MAX_VALUE));
+        }).collect(Collectors.toList());
     }
 
-    private List<DriverAttributeInfo> buildDriverAttributesInfo(Class<? extends AbstractDriver<?>> driver) {
+    private List<DriverAttribute> buildDriverAttributes(Class<? extends AbstractDriver<?>> driver) {
         Class<?> actualDriverAttributes = (Class<?>) ((ParameterizedTypeImpl) driver.getGenericSuperclass()).getActualTypeArguments()[0];
         Field[] attributesDeclaredFields = actualDriverAttributes.getDeclaredFields();
 
-        List<DriverAttributeInfo> result = new ArrayList<>();
+        List<DriverAttribute> result = new ArrayList<>();
         for (Field attributesDeclaredField : attributesDeclaredFields) {
-            DriverAttribute annotation = attributesDeclaredField.getAnnotation(DriverAttribute.class);
-            if (null == annotation) {
+            DriverAttributeInfo driverAttributeInfoAnnotation = attributesDeclaredField.getAnnotation(DriverAttributeInfo.class);
+            if (null == driverAttributeInfoAnnotation) {
                 continue;
             }
 
-            DriverAttributeInfo driverAttributeInfo = new DriverAttributeInfo()
-                    .setLabel(annotation.label())
+            DriverAttribute driverAttributeInfo = new DriverAttribute()
+                    .setLabel(driverAttributeInfoAnnotation.label())
                     .setName(attributesDeclaredField.getName())
-                    .setDescription(annotation.description())
-                    .setRequired(annotation.required())
-                    .setOrder(annotation.order());
+                    .setDescription(driverAttributeInfoAnnotation.description())
+                    .setRequired(driverAttributeInfoAnnotation.required())
+                    .setOrder(driverAttributeInfoAnnotation.order());
             result.add(driverAttributeInfo);
         }
 
