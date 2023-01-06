@@ -26,6 +26,7 @@ the<io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension>().a
 }
 
 dependencies {
+    implementation("org.springdoc:springdoc-openapi-ui:1.6.14")
     implementation("org.xerial:sqlite-jdbc:3.40.0.0")
     implementation("com.github.gwenn:sqlite-dialect:0.1.2")
 
