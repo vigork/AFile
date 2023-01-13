@@ -1,4 +1,4 @@
-package team.iks.afile.driver.annotation;
+package team.iks.afile.driver;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -19,5 +19,5 @@ public @interface DriverInfo {
     /**
      * 排序
      */
-    int order() default 0;
+    int order() default Integer.MAX_VALUE;
 }

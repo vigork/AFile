@@ -1,4 +1,4 @@
-package team.iks.afile.driver;
+package team.iks.afile.enumerate;
 
 /**
  * 文件类型枚举类

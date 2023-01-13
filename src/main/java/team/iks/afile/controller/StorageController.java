@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import team.iks.afile.driver.Driver;
-import team.iks.afile.driver.DriverContext;
+import team.iks.afile.pojo.vo.DriverVO;
+import team.iks.afile.driver.DriverRegistry;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,11 +24,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Tag(name = "存储库管理")
 public class StorageController {
-    private final DriverContext driverContext;
+    private final DriverRegistry driverRegistry;
 
     @GetMapping("/drivers")
     @Operation(summary = "获取驱动器列表")
-    public List<Driver> drivers() {
-        return driverContext.drivers();
+    public List<DriverVO> drivers() {
+        return driverRegistry.drivers();
     }
 }

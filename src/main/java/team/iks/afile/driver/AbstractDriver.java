@@ -9,7 +9,7 @@ package team.iks.afile.driver;
 public abstract class AbstractDriver<T extends DriverAttributes> implements Readable, Writeable {
     protected final T config;
 
-    protected AbstractDriver(T config) {
+    public AbstractDriver(T config) {
         this.config = config;
     }
 }

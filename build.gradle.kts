@@ -29,6 +29,8 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-ui:1.6.14")
     implementation("org.xerial:sqlite-jdbc:3.40.0.0")
     implementation("com.github.gwenn:sqlite-dialect:0.1.2")
+    annotationProcessor("com.google.auto.service:auto-service:1.0.1")
+    compileOnly("com.google.auto.service:auto-service-annotations:1.0.1")
 
     implementation("de.codecentric:spring-boot-admin-starter-client")
     implementation("de.codecentric:spring-boot-admin-starter-server")

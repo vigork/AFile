@@ -1,4 +1,4 @@
-package team.iks.afile.driver.annotation;
+package team.iks.afile.driver;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

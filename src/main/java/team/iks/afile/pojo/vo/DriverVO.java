@@ -1,6 +1,8 @@
-package team.iks.afile.driver;
+package team.iks.afile.pojo.vo;
 
 import java.util.List;
+
+import team.iks.afile.driver.AbstractDriver;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -13,7 +15,7 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-public class Driver {
+public class DriverVO {
     /**
      * 驱动名称
      */
@@ -27,7 +29,7 @@ public class Driver {
     /**
      * 配置项信息
      */
-    private List<DriverAttribute> attributes;
+    private List<DriverAttributeVO> attributes;
 
     /**
      * 排序

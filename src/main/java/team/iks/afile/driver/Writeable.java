@@ -2,6 +2,8 @@ package team.iks.afile.driver;
 
 import java.io.InputStream;
 
+import team.iks.afile.pojo.vo.FileItemVO;
+
 /**
  * 文件写操作
  *
@@ -10,27 +12,28 @@ import java.io.InputStream;
  */
 public interface Writeable {
     /**
-     * 新建文件夹
+     * 新建目录, 当目录地址对应的 File 已存在时抛出错误信息
+     * @param virtualAbsolutePath 目录地址
      */
-    FileItem makeDir(String virtualPath);
+    FileItemVO makeDir(String virtualAbsolutePath);
 
     /**
      * 写入文件
      */
-    FileItem write(String virtualPath, InputStream is);
+    FileItemVO write(String virtualAbsolutePath, InputStream in);
 
     /**
      * 删除文件
      */
-    void delete(String virtualPath);
+    void delete(String virtualAbsolutePath);
 
     /**
      * 移动文件
      */
-    FileItem move(String virtualPath, String newVirtualPath);
+    FileItemVO move(String virtualAbsolutePath, String targetVirtualAbsolutePath);
 
     /**
      * 复制文件
      */
-    FileItem copy(String virtualPath, String targetVirtualPath);
+    FileItemVO copy(String virtualAbsolutePath, String targetVirtualAbsolutePath);
 }

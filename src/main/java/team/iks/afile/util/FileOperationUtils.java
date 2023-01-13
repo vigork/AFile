@@ -4,7 +4,7 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.util.Optional;
 
-import team.iks.afile.driver.FileTypeEnum;
+import team.iks.afile.enumerate.FileTypeEnum;
 
 /**
  * 文件操作工具类

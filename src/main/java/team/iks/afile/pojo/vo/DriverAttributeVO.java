@@ -1,4 +1,4 @@
-package team.iks.afile.driver;
+package team.iks.afile.pojo.vo;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-public class DriverAttribute {
+public class DriverAttributeVO {
     private String label;
     private String name;
     private String description;
